@@ -1,0 +1,76 @@
+import os
+import shutil
+import subprocess as sp
+import zipfile
+
+def createBackup():
+
+    original = input("Enter which directory you like to create a backup of: ")
+    backup = input("Enter where you would like your backup to be: ")
+
+    if (os.path.exists(original)):
+        if (os.path.isdir(original)):
+            sp.call(['rsync','-a',original,backup])
+    else:
+        print("Please enter a currently existing directory to make a backup of:\n")
+
+def createArchive():
+
+    arcDir = input("What directory do you want to archive? ")
+
+    if (os.path.exists(arcDir)):
+        x = 0
+    else:
+        arcDir = input("What directory do you want to archive? ")
+
+    arcType = input("Enter the type of archive to be created (zip,gztar,tar,bztar,xztar): ")
+
+    if (arcType == "zip"):
+        x = 0
+    elif (arcType == "gztar"):
+        x = 0
+    elif (arcType == "tar"):
+        x = 0
+    elif (arcType == "bztar"):
+        x = 0
+    elif (arcType == "xztar"):
+        x = 0
+    else:
+        arcType = input("Enter the type of archive to be created (zip,gztar,tar,bztar,xztar): ")
+
+    shutil.make_archive(arcDir,arcType,root_dir='..',base_dir=str(arcDir))
+
+def osZipSize():
+
+    file = "/home/student/Downloads/zip.zip"
+    numberKB = input("Provide the size threshold for display information (In kilobytes): ")
+
+    with zipfile.ZipFile(file) as zf:
+        for info in zf.infolist():
+            print(info.filename)
+            if info.create_system == 0:
+                system = "Windows"
+            elif info.create_system == 3:
+                system = "Unix"
+            else:
+                system = "UNKNOWN"
+            print("System       : ", system)
+            print("Size (kb)    : ", int(info.file_size)/(int(numberKB) * 1024))
+
+active = True
+while (active == True):
+    print("1: Backup a directory")
+    print("2: Archive a directory")
+    print("3: Examine a zip file")
+    choice = input("Enter the number of the action you wish to take (Enter /'exit/' to quit): ")
+
+    if (choice == "1"):
+        createBackup()
+    elif (choice == "2"):
+        createArchive()
+    elif (choice == "3"):
+        osZipSize()
+    elif (choice == "exit"):
+        active = False
+    else:
+        print("Please restart the program and make a valid choice.")
